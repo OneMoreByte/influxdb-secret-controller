@@ -1,0 +1,10 @@
+apiVersion: v2
+name: infuxdb-secret-controller
+description: Create secrets for influxdb access
+
+type: application
+
+version: 0.1.0
+
+# This will be set by the github actions packager
+appVersion: "latest"

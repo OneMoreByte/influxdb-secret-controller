@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "influxdb-secret-controller"
+version = "0.1.0"
+description = ""
+authors = ["Jack <jack@jackhil.de>"]
+license = "GPL3"
+readme = "README.md"
+packages = [{ include = "influxdb_secret_controller" }]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+kubernetes = "^26.1.0"
+requests = "^2.30.0"
+PyYAML = "^6.0"
+influxdb = "^5.3.1"
+schema = "^0.7.5"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.3.0"
+isort = "^5.12.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

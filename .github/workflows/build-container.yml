@@ -1,0 +1,38 @@
+---
+name: Build Container
+on: [push]
+
+jobs:
+  build:
+    name: Build Container
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: get version
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.11
+          run: |
+            python ./scripts/get_version.py
+
+
+      - name: build container
+        id: build-container
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: ghcr.io/onemorebyte/influxdb-secret-controller
+          tags: ${{ env.CURRENT_VERSION }} latest
+          containerfiles: |
+            ./Containerfile
+
+
+      - name: push to image repo
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.build-container.outputs.image }}
+          tags: ${{ steps.build-container.outputs.tags }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
