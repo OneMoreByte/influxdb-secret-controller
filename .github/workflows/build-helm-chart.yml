@@ -41,7 +41,7 @@ jobs:
         run: |
           helm package ./helm/ \
             --destination ./charts \
-            --app-version=${{CURRENT_VERSION}}
+            --app-version=${{env.CURRENT_VERSION}}
 
 
       - name: run chart-releaser
