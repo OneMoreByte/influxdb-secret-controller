@@ -23,12 +23,14 @@ jobs:
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
 
-      - name: get version
+      - name: setup python
         uses: actions/setup-python@v3
         with:
           python-version: 3.11
-          run: |
-            python ./scripts/get_version.py
+      
+      - name: set version
+        run: |
+          python ./scripts/get_version.py
 
 
       - name: install helm
