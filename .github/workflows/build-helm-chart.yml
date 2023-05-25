@@ -40,7 +40,7 @@ jobs:
       - name: package helm chart
         run: |
           helm package ./helm/ \
-            --destination ./charts \
+            --destination ./.cr-release-packages \
             --app-version=${{env.CURRENT_VERSION}}
 
 
