@@ -14,8 +14,8 @@ jobs:
         uses: actions/setup-python@v3
         with:
           python-version: 3.11
-          run: |
-            python ./scripts/get_version.py
+        run: |
+          python ./scripts/get_version.py
 
 
       - name: build container
