@@ -10,10 +10,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: get version
+      - name: setup python
         uses: actions/setup-python@v3
         with:
           python-version: 3.11
+          
+          
+      - name: get version
         run: |
           python ./scripts/get_version.py
 
