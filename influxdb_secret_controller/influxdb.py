@@ -1,5 +1,5 @@
 import logging
-from typing import Optional
+from typing import Any, Optional
 
 import requests
 
@@ -15,16 +15,14 @@ class Client:
             "Content-Type": "application/json",
         }
 
-    def get(self, path: str) -> typing.Any:
+    def get(self, path: str) -> Any:
         res: requests.Response = requests.get(self.uri + path, headers=self.headers)
         if res.status_code == 401:
             logging.error("user is unauthorized for getting!")
         res.raise_for_status
         return res.json()
 
-    def post(
-        self, path: str, payload: Optional[dict[typing.Any, typing.Any]] = None
-    ) -> typing.Any:
+    def post(self, path: str, payload: Optional[dict[Any, Any]] = None) -> Any:
         res: requests.Response = requests.post(
             self.uri + path, headers=self.headers, json=payload
         )
