@@ -42,7 +42,7 @@ def get_current_influxdb_state(client):
     return orgs, buckets, tokens
 
 
-def remote_extra_secrets(extras):
+def remove_extra_secrets(extras):
     for secret in extras:
         logging.info(f"deleting extra secret {secret.name}")
         secret.delete()
