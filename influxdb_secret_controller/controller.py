@@ -4,7 +4,9 @@ from . import config, influxdb, token_secret
 
 
 def set_logging_config():
-    logging.basicConfig(format="[%(asctime)s] [%(level)s] - %(message)s", level="INFO")
+    logging.basicConfig(
+        format="[%(asctime)s] [%(levelname)s] - %(message)s", level="INFO"
+    )
 
 
 def diff_secrets(secrets, cfg) -> tuple[list, list]:
@@ -12,11 +14,11 @@ def diff_secrets(secrets, cfg) -> tuple[list, list]:
     extras = []
     for secret in secrets:
         for requested in needed:
-            matches_name = requested.name = secret.name
-            matches_namespace = requested.namespace = secret.namespace
+            matches_name = requested["name"] == secret.name
+            matches_namespace = requested["namespace"] == secret.namespace
             if matches_name and matches_namespace:
                 logging.info(
-                    f"found a match for {requested.name} in {requested.namespace}. Skipping"
+                    f"found a match for {requested['name']} in {requested['namespace']}. Skipping"
                 )
                 needed.remove(requested)
                 break
