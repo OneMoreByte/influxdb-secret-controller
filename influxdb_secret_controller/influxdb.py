@@ -19,6 +19,7 @@ class Client:
         res: requests.Response = requests.get(self.uri + path, headers=self.headers)
         if res.status_code == 401:
             logging.error("user is unauthorized for getting!")
+            return None
         res.raise_for_status
         return res.json()
 
@@ -28,6 +29,7 @@ class Client:
         )
         if res.status_code == 401:
             logging.error("user is unauthorized for creating!")
+            return None
         res.raise_for_status
         return res.json()
 
@@ -38,6 +40,7 @@ class Client:
         )
         if res.status_code == 401:
             logging.error("user is unauthorized for deleting!")
+            return None
         res.raise_for_status
         return res.json()
 
