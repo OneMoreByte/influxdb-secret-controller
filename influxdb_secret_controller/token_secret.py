@@ -82,7 +82,7 @@ class KubeClient:
             )
             return []
         secrets: list[InfluxTokenSecret] = []
-        for secret in res.list:
+        for secret in res:
             deployment_name = secret["metadata"]["labels"].get("isc_name")
             if deployment_name != self.deployment_name:
                 logging.warning(
