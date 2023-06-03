@@ -104,4 +104,4 @@ class KubeClient:
 
     def _get_k8s_config(self) -> kubernetes.client.CoreV1Api:
         kubernetes.config.load_incluster_config()
-        return client.CoreV1Api()
+        return kubernetes.client.CoreV1Api()
