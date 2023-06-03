@@ -7,8 +7,8 @@ def set_logging_config():
     logging.basicConfig(format="[%(asctime)s] [%(level)s] - %(message)s", level="INFO")
 
 
-def diff_secrets(secrets, config) -> tuple[list, list]:
-    needed = config.requested_secrets.copy()
+def diff_secrets(secrets, cfg) -> tuple[list, list]:
+    needed = cfg.requested_secrets.copy()
     extras = []
     for secret in secrets:
         for requested in needed:
@@ -46,8 +46,8 @@ def remote_extra_secrets(extras):
         secret.delete()
 
 
-def create_new_secrets(k8_client, needed_secrets):
-    influx_client = influxdb.Client(config)
+def create_new_secrets(k8_client, needed_secrets, cfg):
+    influx_client = influxdb.Client(cfg)
     orgs, buckets, tokens = get_current_influxdb_state(influx_client)
     for secret in needed:
         token_name = f"{secret.name}-{secret.namespace}"
@@ -111,6 +111,6 @@ def main():
 
     if needed:
         logging.info(f"creating {len(needed)} new secrets")
-        create_new_secrets(k8s_client, needed)
+        create_new_secrets(k8s_client, needed, cfg)
     else:
         logging.info("didn't need to create any new secrets.")

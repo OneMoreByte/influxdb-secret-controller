@@ -7,9 +7,9 @@ from . import config
 
 
 class Client:
-    def __init__(self, config: config.Config):
-        self.uri = config.influxdb_uri
-        self.token = config.influxdb_token
+    def __init__(self, cfg: config.Config):
+        self.uri = cfg.influxdb_uri
+        self.token = cfg.influxdb_token
         self.headers = {
             "Authorization": f"token {self.token}",
             "Content-Type": "application/json",
