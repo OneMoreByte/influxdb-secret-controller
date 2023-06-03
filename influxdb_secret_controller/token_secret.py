@@ -69,7 +69,7 @@ class KubeClient:
     ) -> list[InfluxTokenSecret]:
         try:
             res = self.client.list_secret_for_all_namespaces(
-                pretty=self.config.debug,
+                pretty=self.debug,
                 label_selector="managed_by_isc=true",
                 limit=limit,
                 # Maybe we'll need this eventually?

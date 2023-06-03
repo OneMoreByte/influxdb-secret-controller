@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "influxdb-secret-controller"
-version = "0.1.7"
+version = "0.1.8"
 description = ""
 authors = ["Jack <jack@jackhil.de>"]
 license = "GPL3"
