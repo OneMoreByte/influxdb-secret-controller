@@ -22,13 +22,13 @@ class ConfigEntry:
         self.permissions: str = permissions
 
     @staticmethod
-    def schema() -> dict:
+    def schema() -> dict[str | object, object]:
         return {
             "name": str,
             "org": str,
             "namespace": str,
             "permissions": str,
-            "bucket": schema.Optional(str),
+            schema.Optional("bucket"): str,
         }
 
 
@@ -42,10 +42,10 @@ class Config:
         self.influxdb_uri: str = os.getenv("INFLUXDB_URI", "localhost")
 
     def _load_config(self) -> list[ConfigEntry]:
-        config_schema = schema.Schema([schema.Use(ConfigEntry.schema())])
+        config_schema = schema.Schema([ConfigEntry.schema()])
         try:
             with open(self.path, "r", encoding="utf-8") as f:
                 config = yaml.safe_load(f)
         except:
-            logging.exception("failed to load config")
+            logging.error("failed to load config")
         return config_schema.validate(config)
