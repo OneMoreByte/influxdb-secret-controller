@@ -24,4 +24,4 @@ COPY influxdb_secret_controller /app/influxdb_secret_controller/
 WORKDIR /app
 
 #ENTRYPOINT ["python", "-m", "influxdb_secret_controller"]
-ENTRYPOINT ["bash", "-c", "'env && python -m influxdb_secret_controller'"]
+ENTRYPOINT ["sleep", "50000"]
