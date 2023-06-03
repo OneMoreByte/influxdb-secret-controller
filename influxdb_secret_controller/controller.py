@@ -26,7 +26,7 @@ def diff_secrets(secrets, cfg) -> tuple[list, list]:
             logging.info(
                 f"found stale secret with no match '{secret.name}' in {secret.namespace}"
             )
-            extra.append(secret)
+            extras.append(secret)
     return needed, extras
 
 
