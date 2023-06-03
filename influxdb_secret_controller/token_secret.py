@@ -76,7 +76,7 @@ class KubeClient:
                 # timeout_seconds=timeout_seconds,
             )
 
-        except ApiException as e:
+        except kubernetes.client.ApiException as e:
             logging.exception(
                 "Exception when calling CoreV1Api->list_namespaced_secret: %s\n", e
             )
