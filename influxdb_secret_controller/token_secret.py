@@ -102,6 +102,6 @@ class KubeClient:
             return secrets + get_current_secrets(api, limit, cont=True)
         return secrets
 
-    def _get_k8s_config() -> kubernetes.client.CoreV1Api:
+    def _get_k8s_config(self) -> kubernetes.client.CoreV1Api:
         kubernetes.config.load_incluster_config()
         return client.CoreV1Api()
