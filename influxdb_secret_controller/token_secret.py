@@ -65,7 +65,7 @@ class KubeClient:
         self.deployment_name = config.deployment_name
 
     def get_current_secrets(
-        limit: int = 100, cont: bool = False
+        self, limit: int = 100, cont: bool = False
     ) -> list[InfluxTokenSecret]:
         try:
             res = self.client.list_secret_for_all_namespaces(
