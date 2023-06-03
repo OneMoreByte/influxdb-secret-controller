@@ -1,6 +1,5 @@
 import base64
 import logging
-import os
 
 import kubernetes
 
@@ -15,12 +14,14 @@ class InfluxTokenSecret:
         token: str,
         api: kubernetes.client.CoreV1Api,
         instance_name: str,
+        debug: bool,
     ):
         self.name = name
         self.namespace = namespace
         self.token = token
         self.api = api
         self.instance_name = instance_name
+        self.debug = debug
 
     def create(self):
         meta = kubernetes.client.V1ObjectMeta(
@@ -36,7 +37,7 @@ class InfluxTokenSecret:
             res = self.api.create_namespaced_secret(
                 self.namespace,
                 secret,
-                pretty=_is_debug(),
+                pretty=self.debug,
             )
             logging.debug(res)
         except kubernetes.client.ApiException as e:
@@ -49,7 +50,7 @@ class InfluxTokenSecret:
             res = self.api.delete_namespaced_secret(
                 self.name,
                 self.namespace,
-                pretty=_is_debug(),
+                pretty=self.debug,
             )
             logging.debug(res)
         except kubernetes.client.ApiException as e:
@@ -96,6 +97,7 @@ class KubeClient:
                     token=token,
                     api=self.client,
                     instance_name=self.deployment_name,
+                    debug=self.debug,
                 )
             )
         if res.metadata._continue:
