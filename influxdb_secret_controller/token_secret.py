@@ -39,7 +39,7 @@ class InfluxTokenSecret:
                 pretty=_is_debug(),
             )
             logging.debug(res)
-        except ApiException as e:
+        except kubernetes.client.ApiException as e:
             logging.exeception(
                 "Exception when calling CoreV1Api->create_namespaced_secret: %s\n", e
             )
@@ -52,7 +52,7 @@ class InfluxTokenSecret:
                 pretty=_is_debug(),
             )
             logging.debug(res)
-        except ApiException as e:
+        except kubernetes.client.ApiException as e:
             logging.exeception(
                 "Exception when calling CoreV1Api->delete_namespaced_secret: %s\n", e
             )
