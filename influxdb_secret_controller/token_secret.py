@@ -68,7 +68,7 @@ class KubeClient:
         self, limit: int = 100, cont: bool = False
     ) -> list[InfluxTokenSecret]:
         try:
-            res = self.client.list_secret_for_all_namespaces(
+            res: kubernetes.client.V1SecretList = self.client.list_secret_for_all_namespaces(
                 pretty=self.debug,
                 label_selector="managed_by_isc=true",
                 limit=limit,
@@ -82,17 +82,17 @@ class KubeClient:
             )
             return []
         secrets: list[InfluxTokenSecret] = []
-        for secret in res:
-            deployment_name = secret["metadata"]["labels"].get("isc_name")
+        for secret in res.items:
+            deployment_name = secret.metadata.labels.get("isc_name")
             if deployment_name != self.deployment_name:
                 logging.warning(
                     f"found a secret that doesn't match our deployment name! {deployment_name} vs {self.deployment_name}"
                 )
-            token = base64.b64decode(secret["data"].get("token", "")).decode()
+            token = base64.b64decode(secret.data.get("token", "")).decode()
             secrets.append(
                 InfluxTokenSecret(
-                    name=secret["metadata"]["name"],
-                    namespace=secret["metadata"]["namespace"],
+                    name=secret.metadata.name,
+                    namespace=secret.metadata.namespace,
                     token=token,
                     api=self.client,
                     instance_name=self.deployment_name,
