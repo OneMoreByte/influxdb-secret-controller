@@ -59,7 +59,7 @@ class InfluxTokenSecret:
 
 
 class KubeClient:
-    def __init__(config: config.Config):
+    def __init__(self, config: config.Config):
         self.client = self._get_k8s_config()
         self.debug = config.debug
         self.deployment_name = config.deployment_name

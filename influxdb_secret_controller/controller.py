@@ -99,11 +99,11 @@ def create_new_secrets(k8_client, needed_secrets):
 
 def main():
     set_logging_config()
-    config = config.Config()
-    k8s_client = token_secret.KubeClient(config)
+    cfg = config.Config()
+    k8s_client = token_secret.KubeClient(cfg)
     logging.info("finding owned secrets")
     secrets = k8s_client.get_current_secrets()
-    needed, extras = diff_secrets(secrets, config)
+    needed, extras = diff_secrets(secrets, cfg)
 
     if extras:
         logging.info(f"cleaning up {len(extras)} old secrets")

@@ -1,5 +1,3 @@
-from . import config, influxdb, token_secret
+from . import controller
 
-
-def main():
-    config = config.Config()
+controller.main()

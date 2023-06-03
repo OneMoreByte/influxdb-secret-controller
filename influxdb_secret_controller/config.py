@@ -8,6 +8,7 @@ import yaml
 
 class ConfigEntry:
     def __init__(
+        self,
         name: str,
         org: str,
         namespace: str,
@@ -32,7 +33,7 @@ class ConfigEntry:
 
 
 class Config:
-    def __init__():
+    def __init__(self):
         self.path: str = os.getenv("CONFIG_PATH", "./config.yml")
         self.debug: bool = os.getenv("DEBUG", "false").lower() == "true"
         self.deployment_name: str = os.getenv("DEPLOYMENT_NAME", "isc")
