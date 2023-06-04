@@ -98,6 +98,7 @@ def create_new_secrets(k8s_client, needed_secrets, cfg):
                 client=influx_client,
                 permissions=secret["permissions"],
             )
+            token.create()
         secret = k8s_client.new_secret(secret, token)
 
 

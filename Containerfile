@@ -23,5 +23,4 @@ COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 COPY influxdb_secret_controller /app/influxdb_secret_controller/
 WORKDIR /app
 
-#ENTRYPOINT ["python", "-m", "influxdb_secret_controller"]
-ENTRYPOINT ["sleep", "50000"]
+ENTRYPOINT ["python", "-m", "influxdb_secret_controller"]

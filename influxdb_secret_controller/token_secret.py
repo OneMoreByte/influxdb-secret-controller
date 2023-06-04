@@ -25,10 +25,11 @@ class InfluxTokenSecret:
 
     def create(self):
         meta = kubernetes.client.V1ObjectMeta(
+            name=self.name,
             labels={
                 "managed_by_isc": "true",
-                "isc_name": instance_name,
-            }
+                "isc_name": self.instance_name,
+            },
         )
         secret = kubernetes.client.V1Secret(
             metadata=meta, string_data={"token": self.token}
@@ -41,7 +42,7 @@ class InfluxTokenSecret:
             )
             logging.debug(res)
         except kubernetes.client.ApiException as e:
-            logging.exeception(
+            logging.exception(
                 "Exception when calling CoreV1Api->create_namespaced_secret: %s\n", e
             )
 
@@ -54,7 +55,7 @@ class InfluxTokenSecret:
             )
             logging.debug(res)
         except kubernetes.client.ApiException as e:
-            logging.exeception(
+            logging.exception(
                 "Exception when calling CoreV1Api->delete_namespaced_secret: %s\n", e
             )
 
@@ -71,8 +72,8 @@ class KubeClient:
             namespace=secret_cfg.get("namespace"),
             token=token.token,
             api=self.client,
-            instance_name=cfg.deployment_name,
-            debug=cfg.debug,
+            instance_name=self.deployment_name,
+            debug=self.debug,
         )
         secret.create()
 
