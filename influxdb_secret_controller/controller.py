@@ -48,43 +48,45 @@ def remove_extra_secrets(extras):
         secret.delete()
 
 
-def create_new_secrets(k8_client, needed_secrets, cfg):
+def create_new_secrets(k8s_client, needed_secrets, cfg):
     influx_client = influxdb.Client(cfg)
     orgs, buckets, tokens = get_current_influxdb_state(influx_client)
-    for secret in needed:
-        token_name = f"{secret.name}-{secret.namespace}"
+    for secret in needed_secrets:
+        token_name = f"{secret['name']}-{secret['namespace']}"
         for token in tokens:
             name_matches = token.name == token_name
-            org_matches = token.org.name == secret.org
-            bucket_matches = token.bucket and token.bucket.name == secret.bucket
+            org_matches = token.org.name == secret["org"]
+            bucket_matches = token.bucket and token.bucket.name == secret["bucket"]
             if name_matches and org_matches and bucket_matches:
                 logging.warning(
                     f"token already exists for {token_name}? Using pre-existing one"
                 )
                 break
         else:
-            logging.info(f"creating token for {secret.name} in {secret.namespace}")
+            logging.info(
+                f"creating token for {secret['name']} in {secret['namespace']}"
+            )
             for org in orgs:
-                if org.name == secret.org:
+                if org.name == secret["org"]:
                     logging.info(f"found org {org.name}")
                     break
             else:
-                logging.info(f"needed to create org {secret.org}")
-                org = influxdb.Org(id=None, name=secret.org, client=influx_client)
+                logging.info(f"needed to create org {secret['org']}")
+                org = influxdb.Org(id=None, name=secret["org"], client=influx_client)
                 org.create()
                 orgs.append(org)
             bucket = None
-            if secret.bucket:
+            if secret.get("bucket"):
                 if buckets.get(org.name) is None:
                     buckets[org.name] = []
                 for bucket in buckets[org.name]:
-                    if bucket.name == secret.bucket:
+                    if bucket.name == secret["bucket"]:
                         logging.info(f"found bucket {bucket.name}")
                         break
                 else:
-                    logging.info(f"needed to create bucket {secret.bucket}")
+                    logging.info(f"needed to create bucket {secret['bucket']}")
                     bucket = influxdb.Bucket(
-                        id=None, name=secret.bucket, org=org, client=influx_client
+                        id=None, name=secret["bucket"], org=org, client=influx_client
                     )
                     bucket.create()
                     buckets[org.name].append(bucket)
@@ -94,8 +96,7 @@ def create_new_secrets(k8_client, needed_secrets, cfg):
                 org=org,
                 bucket=bucket,
                 client=influx_client,
-                permissions=secret.permissions,
-                debug=cfg.debug,
+                permissions=secret["permissions"],
             )
         secret = k8s_client.new_secret(secret, token)
 

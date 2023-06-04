@@ -3,7 +3,7 @@ import logging
 
 import kubernetes
 
-from . import config
+from . import config, influxdb
 
 
 class InfluxTokenSecret:
@@ -64,6 +64,17 @@ class KubeClient:
         self.client = self._get_k8s_config()
         self.debug = config.debug
         self.deployment_name = config.deployment_name
+
+    def new_secret(self, secret_cfg: dict, token: influxdb.Token):
+        secret = InfluxTokenSecret(
+            name=secret_cfg.get("name"),
+            namespace=secret_cfg.get("namespace"),
+            token=token.token,
+            api=self.client,
+            instance_name=cfg.deployment_name,
+            debug=cfg.debug,
+        )
+        secret.create()
 
     def get_current_secrets(
         self, limit: int = 100, cont: bool = False

@@ -131,7 +131,7 @@ class Token:
 def get_orgs(client: Client) -> list[Org]:
     raw_orgs = client.get("/api/v2/orgs")
     orgs: list[Org] = []
-    for org_json in raw_orgs:
+    for org_json in raw_orgs.get("orgs", []):
         orgs.append(Org(org_json["id"], org_json["name"], client))
     return orgs
 
@@ -139,7 +139,7 @@ def get_orgs(client: Client) -> list[Org]:
 def get_buckets(client: Client, org: Org) -> list[Bucket]:
     raw_buckets = client.get(f"/api/v2/buckets?orgID={org.id}")
     buckets: list[Bucket] = []
-    for bucket_json in raw_buckets:
+    for bucket_json in raw_buckets.get("buckets"):
         buckets.append(Bucket(bucket_json["id"], bucket_json["name"], org, client))
     return buckets
 
@@ -147,20 +147,20 @@ def get_buckets(client: Client, org: Org) -> list[Bucket]:
 def get_tokens(
     client: Client,
 ) -> list[Token]:
-    raw_tokens = client.get("/api/v2/authorization")
+    raw_tokens = client.get("/api/v2/authorizations")
     tokens: list[Token] = []
     for token_json in raw_tokens:
-        org = Org(token_json["orgId"], token_json["org"], client)
+        org = Org(token_json["orgID"], token_json["org"], client)
         permissions = token_json["permissions"]
         bucket = None
         if permissions[0].get("name"):
             bucket = Bucket(permissions[0]["id"], permissions[0]["name"], org, client)
         tokens.append(
             Token(
-                token_json["name"],
+                "",
                 org,
                 client,
-                permissions["action"],
+                permissions[0]["action"],
                 token_json["id"],
                 bucket,
             )
