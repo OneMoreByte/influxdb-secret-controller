@@ -131,16 +131,18 @@ class Token:
 def get_orgs(client: Client) -> list[Org]:
     raw_orgs = client.get("/api/v2/orgs")
     orgs: list[Org] = []
-    for org_json in raw_orgs.get("orgs", []):
-        orgs.append(Org(org_json["id"], org_json["name"], client))
+    if raw_orgs:
+        for org_json in raw_orgs.get("orgs", []):
+            orgs.append(Org(org_json["id"], org_json["name"], client))
     return orgs
 
 
 def get_buckets(client: Client, org: Org) -> list[Bucket]:
     raw_buckets = client.get(f"/api/v2/buckets?orgID={org.id}")
     buckets: list[Bucket] = []
-    for bucket_json in raw_buckets.get("buckets"):
-        buckets.append(Bucket(bucket_json["id"], bucket_json["name"], org, client))
+    if raw_buckets:
+        for bucket_json in raw_buckets.get("buckets"):
+            buckets.append(Bucket(bucket_json["id"], bucket_json["name"], org, client))
     return buckets
 
 
@@ -149,20 +151,23 @@ def get_tokens(
 ) -> list[Token]:
     raw_tokens = client.get("/api/v2/authorizations")
     tokens: list[Token] = []
-    for token_json in raw_tokens.get("authorizations"):
-        org = Org(token_json["orgID"], token_json["org"], client)
-        permissions = token_json["permissions"]
-        bucket = None
-        if permissions[0].get("name"):
-            bucket = Bucket(permissions[0]["id"], permissions[0]["name"], org, client)
-        tokens.append(
-            Token(
-                token_json["description"],
-                org,
-                client,
-                permissions[0]["action"],
-                token_json["id"],
-                bucket,
+    if raw_tokens:
+        for token_json in raw_tokens.get("authorizations"):
+            org = Org(token_json["orgID"], token_json["org"], client)
+            permissions = token_json["permissions"]
+            bucket = None
+            if permissions[0].get("name"):
+                bucket = Bucket(
+                    permissions[0]["id"], permissions[0]["name"], org, client
+                )
+            tokens.append(
+                Token(
+                    token_json["description"],
+                    org,
+                    client,
+                    permissions[0]["action"],
+                    token_json["id"],
+                    bucket,
+                )
             )
-        )
     return tokens
