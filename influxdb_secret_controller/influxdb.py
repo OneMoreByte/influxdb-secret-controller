@@ -97,30 +97,43 @@ class Token:
         logging.info(
             f"creating token {self.name} in {self.org.name} with {self.permissions}"
         )
-        resource = {
-            "orgID": self.org.id,
-        }
-        if self.bucket is not None:
-            logging.info(
-                f"scoping permissions of {self.name} to bucket {self.bucket.name}"
+        permissions = []
+        resource_types = [
+            "buckets",
+            "dashboards",
+            "variables",
+            "labels",
+            "views",
+            "documents",
+            "checks," "dbrp",
+            "notebooks",
+            "annotations",
+            "remotes",
+            "replications",
+        ]
+        for resource_type in resource_types:
+            permissions.append(
+                {
+                    "action": self.permissions,
+                    "resource": {
+                        "orgID": self.org.id,
+                        "type": resource_type,
+                    },
+                }
             )
-            resource["type"] = "buckets"
-            resource["name"] = self.bucket.name
         payload = {
             "status": "active",
             "description": self.name,
             "orgID": self.org.id,
-            "permissions": [
-                {
-                    "action": self.permissions,
-                    "resource": resource,
-                },
-            ],
+            "permissions": permissions,
         }
         raw_token = self.client.post("/api/v2/authorizations", payload)
         self.id = raw_token.get("id")
         self.token = raw_token.get("token")
-        logging.info("successfully created token")
+        if self.id and self.token:
+            logging.info("successfully created token")
+        else:
+            logging.error("failed to create token!")
 
     def delete(self):
         logging.info(f"deleting token {self.name} in {self.org.name}")
